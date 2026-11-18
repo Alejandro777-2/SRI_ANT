@@ -1,0 +1,42 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: consulta-sri
+  data:
+    redis:
+      url: ${REDIS_URL:redis://localhost:6379}
+      timeout: 2s
+      connect-timeout: 2s
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  health:
+    redis:
+      enabled: false
+
+app:
+  cors-origins: ${CORS_ORIGINS:http://localhost:5173}
+  cache:
+    provider: ${CACHE_PROVIDER:redis}
+  upstream:
+    sri-base-url: https://srienlinea.sri.gob.ec
+    ant-base-url: https://consultaweb.ant.gob.ec
+    connect-timeout: 3s
+    read-timeout: 6s
+  # fresca   : mientras el dato sea más joven, se responde desde caché sin llamar al servicio externo.
+  # retencion: tiempo máximo que se conserva el último dato bueno para responder cuando el externo cae.
+  politicas:
+    contribuyente:
+      fresca: 1h
+      retencion: 7d
+    vehiculo:
+      fresca: 6h
+      retencion: 30d
+    licencia:
+      fresca: 15m
+      retencion: 7d
